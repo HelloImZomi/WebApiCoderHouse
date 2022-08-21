@@ -19,7 +19,4 @@
     <None Remove="System.Data.SqlClient" />
     <None Remove="Microsoft.Data.SqlClient" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Repository\" />
-  </ItemGroup>
 </Project>

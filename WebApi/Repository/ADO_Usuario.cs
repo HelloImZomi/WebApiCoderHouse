@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -8,11 +10,24 @@ namespace WebApi.Repository
 {
     public class ADO_Usuario
     {
+        private static IConfigurationRoot? _configuration;
+
+        private static string GetConnectionString()
+        {
+            var builder = new ConfigurationBuilder()
+                   .SetBasePath(Directory.GetCurrentDirectory())
+                   .AddJsonFile("appsettings.json");
+
+            _configuration = builder.Build();
+
+            return _configuration["ConnectionStrings:StoreContext"];
+        }
+
         public static List<Usuario> GetAll()
         {
             List<Usuario> usuarios = new List<Usuario>();
 
-            string dsn = @"Server=localhost,1433;Database=SistemaGestion;User Id=sa;Password=M4rz0Dev!;";
+            string dsn = GetConnectionString();
             string queryString = "SELECT * FROM Usuario;";
 
             using(SqlConnection connection = new SqlConnection(dsn))
@@ -50,7 +65,7 @@ namespace WebApi.Repository
         {
             Usuario usuario = new Usuario();
 
-            string dsn = @"Server=localhost,1433;Database=SistemaGestion;User Id=sa;Password=M4rz0Dev!;";
+            string dsn = GetConnectionString();
 
             using (SqlConnection connection = new SqlConnection(dsn))
             {

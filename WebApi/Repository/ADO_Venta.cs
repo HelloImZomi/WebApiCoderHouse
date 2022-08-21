@@ -8,11 +8,24 @@ namespace WebApi.Repository
 {
     public class ADO_Venta
     {
+        private static IConfigurationRoot? _configuration;
+
+        private static string GetConnectionString()
+        {
+            var builder = new ConfigurationBuilder()
+                   .SetBasePath(Directory.GetCurrentDirectory())
+                   .AddJsonFile("appsettings.json");
+
+            _configuration = builder.Build();
+
+            return _configuration["ConnectionStrings:StoreContext"];
+        }
+
         public static List<Venta> GetAll()
         {
             List<Venta> ventas = new List<Venta>();
 
-            string dsn = @"Server=localhost,1433;Database=SistemaGestion;User Id=sa;Password=M4rz0Dev!;";
+            string dsn = GetConnectionString();
             string queryString = "SELECT * FROM Venta;";
 
             using (SqlConnection connection = new SqlConnection(dsn))
@@ -47,7 +60,7 @@ namespace WebApi.Repository
         {
             Venta venta = new Venta();
 
-            string dsn = @"Server=localhost,1433;Database=SistemaGestion;User Id=sa;Password=M4rz0Dev!;";
+            string dsn = GetConnectionString();
 
             using (SqlConnection connection = new SqlConnection(dsn))
             {

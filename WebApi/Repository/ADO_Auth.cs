@@ -7,18 +7,24 @@ namespace WebApi.Repository
 {
     public class ADO_Auth
     {
-        private readonly IConfiguration _configuration;
+        private static IConfigurationRoot? _configuration;
 
-        public ADO_Auth(IConfiguration config)
+        private static string GetConnectionString()
         {
-            this._configuration = config;
+            var builder = new ConfigurationBuilder()
+                   .SetBasePath(Directory.GetCurrentDirectory())
+                   .AddJsonFile("appsettings.json");
+
+            _configuration = builder.Build();
+
+            return _configuration["ConnectionStrings:StoreContext"];
         }
 
         public static Usuario login(AuthModel credentials)
         {
             Usuario usuario = new Usuario();
 
-            string dsn = @"Server=localhost,1433;Database=SistemaGestion;User Id=sa;Password=M4rz0Dev!;";
+            string dsn = GetConnectionString();
 
             using (SqlConnection connection = new SqlConnection(dsn))
             {
