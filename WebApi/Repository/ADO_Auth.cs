@@ -20,7 +20,7 @@ namespace WebApi.Repository
             return _configuration["ConnectionStrings:StoreContext"];
         }
 
-        public static Usuario login(AuthModel credentials)
+        public static Usuario login(string nombreUsuario, string contraseña)
         {
             Usuario usuario = new Usuario();
 
@@ -33,9 +33,9 @@ namespace WebApi.Repository
                     cmd.Connection = connection;
                     cmd.Connection.Open();
 
-                    cmd.CommandText = @"SELECT * FROM Usuario WHERE nombreUsuario = @nombreUsuario AND contraseña = @contraseña;";
-                    cmd.Parameters.AddWithValue("@nombreUsuario", credentials.NombreUsuario);
-                    cmd.Parameters.AddWithValue("@contraseña", credentials.Contraseña);
+                    cmd.CommandText = @"SELECT * FROM Usuario WHERE NombreUsuario = @nombreUsuario AND Contraseña = @contraseña;";
+                    cmd.Parameters.AddWithValue("@nombreUsuario", nombreUsuario);
+                    cmd.Parameters.AddWithValue("@contraseña", contraseña);
 
                     SqlDataAdapter adapter = new SqlDataAdapter();
                     adapter.SelectCommand = cmd;
