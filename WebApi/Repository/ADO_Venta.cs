@@ -85,12 +85,10 @@ namespace WebApi.Repository
 
                         return venta;
                     }
-                    else
-                    {
-                        return null;
-                    }
                 }
             }
+
+            return venta;
         }
 
         public static void Store(Venta venta)
@@ -99,17 +97,20 @@ namespace WebApi.Repository
 
             using (SqlConnection conn = new SqlConnection(dsn))
             {
-                string queryString = @"INSERT INTO venta () 
-                                        VALUES();";
+                string queryString = @"INSERT INTO Venta (Comentarios, idUsuario) 
+                                        VALUES(@comentarios, @idUsuario);";
 
-                var paramNombre = new SqlParameter("@nombre", SqlDbType.VarChar);
-                paramNombre.Value = usuario.Nombre;
+                var paramComentarios = new SqlParameter("@comentarios", SqlDbType.Text);
+                paramComentarios.Value = venta.Comentarios;
+                var paramIdUsuario = new SqlParameter("@idUsuario", SqlDbType.BigInt);
+                paramIdUsuario.Value = venta.IdUsuario;
 
                 conn.Open();
 
                 using (SqlCommand cmd = new SqlCommand(queryString, conn))
                 {
-                    cmd.Parameters.Add(paramNombre);
+                    cmd.Parameters.Add(paramComentarios);
+                    cmd.Parameters.Add(paramIdUsuario);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -118,44 +119,30 @@ namespace WebApi.Repository
             }
         }
 
-        public static void Update(int id, Usuario usuario)
+        public static void Update(int id, Venta venta)
         {
             string dsn = GetConnectionString();
 
             using (SqlConnection conn = new SqlConnection(dsn))
             {
-                string queryString = @"UPDATE usuario SET Nombre = @nombre, Apellido = @apellido,
-                                        NombreUsuario = @nombreUsuario, Contraseña = @contraseña,
-                                        Mail = @mail WHERE id = @id;";
+                string queryString = @"UPDATE Venta SET Comentarios = @comentarios, IdUsuario = @idUsuario
+                                        WHERE Id = @id;";
 
                 var paramId = new SqlParameter("@id", SqlDbType.BigInt);
                 paramId.Value = id;
 
-                var paramNombre = new SqlParameter("@nombre", SqlDbType.VarChar);
-                paramNombre.Value = usuario.Nombre;
+                var paramComentarios = new SqlParameter("@comentarios", SqlDbType.Text);
+                paramComentarios.Value = venta.Comentarios;
 
-                var paramApellido = new SqlParameter("@apellido", SqlDbType.VarChar);
-                paramApellido.Value = usuario.Apellido;
-
-                var paramNombreUsuario = new SqlParameter("@nombreUsuario", SqlDbType.VarChar);
-                paramNombreUsuario.Value = usuario.NombreUsuario;
-
-                var paramContraseña = new SqlParameter("@contraseña", SqlDbType.VarChar);
-                paramContraseña.Value = usuario.Contraseña;
-
-                var paramMail = new SqlParameter("@mail", SqlDbType.VarChar);
-                paramMail.Value = usuario.Mail;
+                var paramIdUsuario = new SqlParameter("@idUsuario", SqlDbType.BigInt);
+                paramIdUsuario.Value = venta.IdUsuario;
 
                 conn.Open();
 
                 using (SqlCommand cmd = new SqlCommand(queryString, conn))
                 {
                     cmd.Parameters.Add(paramId);
-                    cmd.Parameters.Add(paramNombre);
-                    cmd.Parameters.Add(paramApellido);
-                    cmd.Parameters.Add(paramNombreUsuario);
-                    cmd.Parameters.Add(paramContraseña);
-                    cmd.Parameters.Add(paramMail);
+                    cmd.Parameters.Add(paramComentarios);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -170,7 +157,7 @@ namespace WebApi.Repository
 
             using (SqlConnection conn = new SqlConnection(dsn))
             {
-                string queryString = @"DELETE FROM usuario WHERE id = @id;";
+                string queryString = @"DELETE FROM Venta WHERE Id = @id;";
 
                 var paramId = new SqlParameter("@id", SqlDbType.BigInt);
                 paramId.Value = id;

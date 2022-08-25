@@ -71,7 +71,7 @@ namespace WebApi.Repository
                     cmd.Connection = connection;
                     cmd.Connection.Open();
 
-                    cmd.CommandText = @"SELECT * FROM Producto WHERE id = @id;";
+                    cmd.CommandText = @"SELECT * FROM Producto WHERE Id = @id;";
                     cmd.Parameters.AddWithValue("@id", id);
 
                     SqlDataAdapter adapter = new SqlDataAdapter();
@@ -90,47 +90,41 @@ namespace WebApi.Repository
 
                         return producto;
                     }
-                    else
-                    {
-                        return null;
-                    }
                 }
             }
+
+            return producto;
         }
 
-        public static void Store(Usuario usuario)
+        public static void Store(Producto producto)
         {
             string dsn = GetConnectionString();
 
             using (SqlConnection conn = new SqlConnection(dsn))
             {
-                string queryString = @"INSERT INTO usuario (Nombre,Apellido,NombreUsuario,Contraseña,Mail) 
-                                        VALUES(@nombre,@apellido,@nombreUsuario,@contraseña,@mail);";
+                string queryString = @"INSERT INTO Producto (Descripciones, Costo, PrecioVenta, Stock) 
+                                        VALUES(@descripciones,@costo,@precioVenta,@stock);";
 
-                var paramNombre = new SqlParameter("@nombre", SqlDbType.VarChar);
-                paramNombre.Value = usuario.Nombre;
+                var paramDescripciones = new SqlParameter("@descripciones", SqlDbType.Text);
+                paramDescripciones.Value = producto.Descripciones;
 
-                var paramApellido = new SqlParameter("@apellido", SqlDbType.VarChar);
-                paramApellido.Value = usuario.Apellido;
+                var paramCosto = new SqlParameter("@costo", SqlDbType.Money);
+                paramCosto.Value = producto.Costo;
 
-                var paramNombreUsuario = new SqlParameter("@nombreUsuario", SqlDbType.VarChar);
-                paramNombreUsuario.Value = usuario.NombreUsuario;
+                var paramPrecioVenta = new SqlParameter("@precioVenta", SqlDbType.Money);
+                paramPrecioVenta.Value = producto.PrecioVenta;
 
-                var paramContraseña = new SqlParameter("@contraseña", SqlDbType.VarChar);
-                paramContraseña.Value = usuario.Contraseña;
-
-                var paramMail = new SqlParameter("@mail", SqlDbType.VarChar);
-                paramMail.Value = usuario.Mail;
+                var paramStock = new SqlParameter("@stock", SqlDbType.Int);
+                paramStock.Value = producto.Stock;
 
                 conn.Open();
 
                 using (SqlCommand cmd = new SqlCommand(queryString, conn))
                 {
-                    cmd.Parameters.Add(paramNombre);
-                    cmd.Parameters.Add(paramApellido);
-                    cmd.Parameters.Add(paramNombreUsuario);
-                    cmd.Parameters.Add(paramContraseña);
-                    cmd.Parameters.Add(paramMail);
+                    cmd.Parameters.Add(paramDescripciones);
+                    cmd.Parameters.Add(paramCosto);
+                    cmd.Parameters.Add(paramPrecioVenta);
+                    cmd.Parameters.Add(paramStock);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -139,44 +133,40 @@ namespace WebApi.Repository
             }
         }
 
-        public static void Update(int id, Usuario usuario)
+        public static void Update(int id, Producto producto)
         {
             string dsn = GetConnectionString();
 
             using (SqlConnection conn = new SqlConnection(dsn))
             {
-                string queryString = @"UPDATE usuario SET Nombre = @nombre, Apellido = @apellido,
-                                        NombreUsuario = @nombreUsuario, Contraseña = @contraseña,
-                                        Mail = @mail WHERE id = @id;";
+                string queryString = @"UPDATE Producto Descripciones = @descripciones, Costo = @costo
+                                        Precio = @precioVenta, Stock = @stock 
+                                        SET WHERE id = @id;";
 
                 var paramId = new SqlParameter("@id", SqlDbType.BigInt);
                 paramId.Value = id;
 
-                var paramNombre = new SqlParameter("@nombre", SqlDbType.VarChar);
-                paramNombre.Value = usuario.Nombre;
+                var paramDescripciones = new SqlParameter("@descripciones", SqlDbType.Text);
+                paramDescripciones.Value = producto.Descripciones;
 
-                var paramApellido = new SqlParameter("@apellido", SqlDbType.VarChar);
-                paramApellido.Value = usuario.Apellido;
+                var paramCosto = new SqlParameter("@costo", SqlDbType.Money);
+                paramCosto.Value = producto.Costo;
 
-                var paramNombreUsuario = new SqlParameter("@nombreUsuario", SqlDbType.VarChar);
-                paramNombreUsuario.Value = usuario.NombreUsuario;
-
-                var paramContraseña = new SqlParameter("@contraseña", SqlDbType.VarChar);
-                paramContraseña.Value = usuario.Contraseña;
-
-                var paramMail = new SqlParameter("@mail", SqlDbType.VarChar);
-                paramMail.Value = usuario.Mail;
+                var paramPrecioVenta = new SqlParameter("@precioVenta", SqlDbType.Money);
+                paramPrecioVenta.Value = producto.PrecioVenta;
+                
+                var paramStock = new SqlParameter("@stock", SqlDbType.Int);
+                paramStock.Value = producto.Stock;
 
                 conn.Open();
 
                 using (SqlCommand cmd = new SqlCommand(queryString, conn))
                 {
                     cmd.Parameters.Add(paramId);
-                    cmd.Parameters.Add(paramNombre);
-                    cmd.Parameters.Add(paramApellido);
-                    cmd.Parameters.Add(paramNombreUsuario);
-                    cmd.Parameters.Add(paramContraseña);
-                    cmd.Parameters.Add(paramMail);
+                    cmd.Parameters.Add(paramDescripciones);
+                    cmd.Parameters.Add(paramCosto);
+                    cmd.Parameters.Add(paramPrecioVenta);
+                    cmd.Parameters.Add(paramStock);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -191,7 +181,7 @@ namespace WebApi.Repository
 
             using (SqlConnection conn = new SqlConnection(dsn))
             {
-                string queryString = @"DELETE FROM usuario WHERE id = @id;";
+                string queryString = @"DELETE FROM Producto WHERE Id = @id;";
 
                 var paramId = new SqlParameter("@id", SqlDbType.BigInt);
                 paramId.Value = id;

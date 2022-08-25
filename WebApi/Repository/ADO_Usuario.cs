@@ -92,12 +92,49 @@ namespace WebApi.Repository
                         usuario.Mail = dataTable.Rows[0]["Mail"].ToString();
 
                         return usuario;
-                    } else
-                    {
-                        return null;
                     }
                 }
             }
+
+            return usuario;
+        }
+
+        public static Usuario GetByUserName(string nombreUsuario)
+        {
+            Usuario usuario = new Usuario();
+
+            string dsn = GetConnectionString();
+
+            using (SqlConnection connection = new SqlConnection(dsn))
+            {
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.Connection = connection;
+                    cmd.Connection.Open();
+
+                    cmd.CommandText = @"SELECT * FROM Usuario WHERE NombreUsuario = @nombreUsuario;";
+                    cmd.Parameters.AddWithValue("@nombreUsuario", nombreUsuario);
+
+                    SqlDataAdapter adapter = new SqlDataAdapter();
+                    adapter.SelectCommand = cmd;
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+
+                    if (dataTable.Rows.Count > 0)
+                    {
+                        usuario.Id = Convert.ToInt32(dataTable.Rows[0]["Id"]);
+                        usuario.Nombre = dataTable.Rows[0]["Nombre"].ToString();
+                        usuario.Apellido = dataTable.Rows[0]["Apellido"].ToString();
+                        usuario.NombreUsuario = dataTable.Rows[0]["NombreUsuario"].ToString();
+                        usuario.Contraseña = dataTable.Rows[0]["Contraseña"].ToString();
+                        usuario.Mail = dataTable.Rows[0]["Mail"].ToString();
+
+                        return usuario;
+                    }
+                }
+            }
+
+            return usuario;
         }
 
         public static void Store(Usuario usuario)
