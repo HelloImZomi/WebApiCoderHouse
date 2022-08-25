@@ -29,20 +29,23 @@ namespace WebApi.Controllers
 
         // POST: api/Venta
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] Venta venta)
         {
+            ADO_Venta.Store(venta);
         }
 
         // PUT: api/Venta/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] Venta venta)
         {
+            ADO_Venta.Update(id, venta);
         }
 
         // DELETE: api/Venta/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            ADO_Venta.Delete(id);
         }
     }
 }

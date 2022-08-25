@@ -13,6 +13,13 @@ namespace WebApi.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
+        // GET: api/Usuario/nombreUsuario/contraseña
+        [HttpGet("{nombreUsuario}/{contraseña}", Name = "Auth")]
+        public Usuario Auth(string nombreUsuario, string contraseña)
+        {
+            return ADO_Auth.login(nombreUsuario, contraseña);
+        }
+
         [HttpGet(Name = "ObtenerUsuarios")]
         public IEnumerable<Usuario> Get()
         {
@@ -20,10 +27,17 @@ namespace WebApi.Controllers
         }
 
         // GET: api/Usuario/5
-        [HttpGet("{id}", Name = "BuscarUsuario")]
+        [HttpGet("{id}", Name = "BuscarUsuarioPorId")]
         public Usuario Get(int id)
         {
             return ADO_Usuario.GetById(id);
+        }
+
+        // GET: api/Usuario/nombreUsuario
+        [HttpGet("{nombreUsuario}", Name = "BuscarUsuarioPorNombreUsuario")]
+        public Usuario GetUserByName(string nombreUsuario)
+        {
+            return ADO_Usuario.GetByUserName(nombreUsuario);
         }
 
         // POST: api/Usuario
